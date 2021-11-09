@@ -14,8 +14,8 @@ module.exports = function(app){
         form.renderErrors   ??= form.getData('rendererrors','text');
         form.$wrapper       = form.$el.find('.splitForm__sections');
         form.$sections      = form.$el.find('.splitForm__section');
-        form.$nav           = $('<div class="splitForm__nav"></div>').prependTo(form.$el);
-        form.$actions       = $(`
+        form.$nav           = form.$el.find('.splitForm__nav').length       ? form.$el.find('.splitForm__nav') : $('<div class="splitForm__nav"></div>').prependTo(form.$el);
+        form.$actions       = form.$el.find('.splitForm__actions').length   ? form.$el.find('.splitForm__nav') : $(`
             <div class="splitForm__actions">
                 <button data-dir="prev"  class="splitForm__action step icon-first hidden"><i class="fa fa-arrow-left"></i>${app.labels.buttons.prev[app.lang]}</button>
                 <button data-dir="next"  class="splitForm__action step icon-last "><i class="fa fa-arrow-right"></i>${app.labels.buttons.next[app.lang]}</button>
@@ -32,10 +32,10 @@ module.exports = function(app){
         form.onNext  = (window[form.getData('onnext')] !== undefined)  ? window[form.getData('onnext')]   : function(){ form.log('onNext'); };
         form.onFinal = (window[form.getData('onfinal')] !== undefined) ? window[form.getData('onfinal')]  : function(){ form.log('onFinal'); };
 
-
         form.$sections.first().addClass('active');
         form.$sections.each(function(s,section){
-            form.$nav.append($('<div class="splitForm__navitem '+(s==0?'active':'deactivate')+'" data-step="'+s+'"><span class="number">'+(s+1)+'</span><span class="ellipsis"><span class="number">'+(s+1)+'.</span> '+$(section).data('title')+'</span></div>'));
+            if (!form.$nav.find('.splitForm__navitem[data-step="'+s+'"]').length)
+                form.$nav.append($('<div class="splitForm__navitem '+(s==0?'active':'deactivate')+'" data-step="'+s+'"><span class="number">'+(s+1)+'</span><span class="ellipsis"><span class="number">'+(s+1)+'.</span> '+$(section).data('title')+'</span></div>'));
         });
 
         form.$actions.find('.splitForm__action').on('click',function(){
