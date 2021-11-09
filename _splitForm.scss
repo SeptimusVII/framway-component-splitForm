@@ -1,1 +1,32 @@
 .splitForm{}
+.splitForm__nav{display: flex; font-size: 1.2em; font-weight: bold; margin-bottom: 2rem;overflow: hidden; position: relative;}
+.splitForm__navitem{height: 20px;font-size: 13px; text-align: center; font-weight: normal; color: contrastFW(white,rgba($primary,0.3)); line-height: 20px; background: rgba($primary,0.3); flex-grow: 1; cursor: pointer;transition: all 0.5s;
+	+.splitForm__navitem{margin-left: 5px;}
+    &.complete{background: rgba($primary,0.6); color: contrastFW(white,rgba($primary,0.6));}
+    &:hover,
+    &.active{background: $primary; color: contrastFW(white,$primary);}
+    &.deactivate{pointer-events: none; background:color(greylight); color: contrastFW(white,color(greylight));}
+  	& .number{display: none;}
+  	@include media-max(md){
+		flex-basis: auto;
+		&>.number{display: block;}
+		& .ellipsis>.number{display: inline;}
+		&:not(.active){
+			& .ellipsis{display: none;}
+		}
+		&.active{
+			&>.number{display: none;}
+		}
+	}
+	.splitForm[data-enablenav=false] & {pointer-events: none;}
+}
+.splitForm__sections{margin-bottom: 1rem;}
+.splitForm__section{position: relative; display: none; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+	&.active{display: block; opacity: 1; pointer-events: all;}
+}
+.splitForm__actions{text-align: right;}
+.splitForm__action{}
+
+.splitForm__fields{
+	&:not(.d-grid){@extend .d-grid, .cols-2, .cols-xxs-1;}
+}

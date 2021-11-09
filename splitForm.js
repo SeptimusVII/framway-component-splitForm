@@ -5,11 +5,134 @@ module.exports = function(app){
     SplitForm.lastUpdate     = "2.0.0";
     SplitForm.version        = "1";
     // SplitForm.factoryExclude = true;
-    // SplitForm.loadingMsg     = "This message will display in the console when component will be loaded.";
+    // SplitForm.loadingMsg     = app.checkForm === undefined ? "app.checkForm function is not defined" : false;
     // SplitForm.requires       = [];
 
-    // SplitForm.prototype.onCreate = function(){
-    // do thing after element's creation
-    // }
+    SplitForm.prototype.onCreate = function(){
+        var form = this;
+        form.enableNav      ??= form.getData('enablenav',true);
+        form.renderErrors   ??= form.getData('rendererrors','text');
+        form.$wrapper       = form.$el.find('.splitForm__sections');
+        form.$sections      = form.$el.find('.splitForm__section');
+        form.$nav           = $('<div class="splitForm__nav"></div>').prependTo(form.$el);
+        form.$actions       = $(`
+            <div class="splitForm__actions">
+                <button data-dir="prev"  class="splitForm__action step icon-first hidden"><i class="fa fa-arrow-left"></i>${app.labels.buttons.prev[app.lang]}</button>
+                <button data-dir="next"  class="splitForm__action step icon-last "><i class="fa fa-arrow-right"></i>${app.labels.buttons.next[app.lang]}</button>
+                <button data-dir="final" class="splitForm__action step icon-last hidden btn-bd-primary"><i class="fa fa-check"></i>${app.labels.buttons.send[app.lang]}</button>
+            </div>
+        `).appendTo(form.$el);
+        if (form.renderErrors === 'text')
+            form.$sections.each(function(s,section){$('<div class="error-container"></div>').appendTo(section)});
+        if (form.renderErrors !== false)
+            form.renderErrors = true;
+
+        // callbacks
+        form.onPrev  = (window[form.getData('onprev')] !== undefined)  ? window[form.getData('onprev')]   : function(){ form.log('onPrev'); };
+        form.onNext  = (window[form.getData('onnext')] !== undefined)  ? window[form.getData('onnext')]   : function(){ form.log('onNext'); };
+        form.onFinal = (window[form.getData('onfinal')] !== undefined) ? window[form.getData('onfinal')]  : function(){ form.log('onFinal'); };
+
+
+        form.$sections.first().addClass('active');
+        form.$sections.each(function(s,section){
+            form.$nav.append($('<div class="splitForm__navitem '+(s==0?'active':'deactivate')+'" data-step="'+s+'"><span class="number">'+(s+1)+'</span><span class="ellipsis"><span class="number">'+(s+1)+'.</span> '+$(section).data('title')+'</span></div>'));
+        });
+
+        form.$actions.find('.splitForm__action').on('click',function(){
+            form.log('action click', this);
+            var checkStep = app.checkForm(form.$sections.filter('.active'),form.renderErrors);
+            if($(this).attr('data-dir') != 'prev'){ // action is either next or final
+                if (checkStep.valid === false) {
+                    form.$sections.filter('.active').removeClass('complete');
+                    form.$wrapper.removeClass('isComplete');
+                } else { 
+                    form.$sections.filter('.active').addClass('complete');
+                }
+                // form.$sections.filter('.active').addClass('complete'); // DEBUG
+            }
+            if($(this).attr('data-dir') != 'final'){ // action is either prev or next
+                form.switchStep($(this).attr('data-dir'));
+            }
+            else if($(this).attr('data-dir') == 'final' && form.$sections.filter('.active').hasClass('complete')){ // action is final, and form is valid
+                if(checkStep.valid){
+                    // do the final thing
+                    form.$nav.find('.splitForm__navitem.active').addClass('complete');
+                    form.$wrapper.addClass('isComplete');
+                    form.onFinal();
+                }
+            }
+
+        });
+        if (form.enableNav === true) {
+            form.$nav.find('.splitForm__navitem').on('click',function(){
+                form.log('nav item click', this)
+                if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
+                    return false;
+                var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+                if (posNext < 0)
+                    for (var i = 0; i > posNext; i--)
+                        form.switchStep('prev');
+                else{
+                    var checkStep = app.checkForm(form.$sections.filter('.active'),form.renderErrors);
+                    if (checkStep.valid === true) {
+                        form.$sections.filter('.active').addClass('complete');
+                        for (var i = 0; i < posNext; i++)
+                            form.switchStep('next');
+                    } else {
+                        form.$sections.filter('.active').removeClass('complete');
+                        form.$wrapper.removeClass('isComplete');
+                    }
+                } 
+            });
+        }
+
+        // things to do if there is only one step
+        if (form.$sections.length <= 1){
+            form.$nav.addClass('hidden');
+        }
+
+        form.log('created');
+    }
+
+    // SplitForm.prototype.switchStep = function(dir){}
+    SplitForm.prototype.switchStep = function(dir){
+        var form = this;
+        return new Promise(function(resolve,reject){
+            var $sections = form.$sections.filter(':not(.deactivate)');
+            var current = $sections.toArray().indexOf(form.$sections.filter('.active').get(0));
+            var next;
+            if (dir == "prev" && current != 0)
+                next = current-1;
+            else if(dir == "next" && current != $sections.length-1)
+                next = current+1;
+
+            if(dir == 'prev' || (dir == 'next' && $sections.eq(current).hasClass('complete'))){
+                $sections.removeClass('active');
+                $sections.eq(next).addClass('active');
+
+                form.$actions.find('.step').removeClass('hidden');
+                if(next == 0){ // first
+                    form.$actions.find('.step[data-dir="prev"]').addClass('hidden');
+                    // if (!form.$wrapper.hasClass('isComplete'))
+                        form.$actions.find('.step[data-dir="final"]').addClass('hidden');
+                }
+                if(next == $sections.length-1){ // last
+                    form.$actions.find('.step[data-dir="next"]').addClass('hidden');
+                } else { // others
+                    // if (!form.$wrapper.hasClass('isComplete'))
+                        form.$actions.find('.step[data-dir="final"]').addClass('hidden');
+                }
+                form.$nav.find('.splitForm__navitem').removeClass('active');
+                form.$nav.find('.splitForm__navitem[data-step='+(next)+']').removeClass('deactivate').addClass('active').prevAll().addClass('complete');
+                form.log('moving to step '+next);
+                if (dir === 'prev') form.onPrev();
+                if (dir === 'next') form.onNext();
+            } else {}
+            resolve();
+        });
+    };
+
+    
+
     return SplitForm;
 }
