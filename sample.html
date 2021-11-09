@@ -1,1 +1,48 @@
-<div class="splitForm"></div>
+<div class="splitForm" data-label-prev="Précédent" data-label-next="Suivant" data-label-final="Envoyer" data-onfinal="" data-enablenav="" data-rendererrors="">
+	<div class="splitForm__sections">
+		<div class="splitForm__section" data-title="title section 1">
+			<div class="splitForm__fields gap-2">
+				<div class="form-group">
+					<label for="field_1">field 1</label>
+					<input type="text" id="field_1" name="field_1">
+					<span class="helper">Saisissez le contenu de field 1</span>
+				</div>
+				<div class="form-group">
+					<label for="field_2">field 2</label>
+					<input type="text" id="field_2" name="field_2">
+					<span class="helper">Saisissez le contenu de field 2</span>
+				</div>
+				<div class="form-group">
+					<label for="field_3">field 3</label>
+					<input type="checkbox" id="field_3_1" value="field_3_1" name="field_3[]">
+					<label for="field_3_1">value 1</label>
+					<input type="checkbox" id="field_3_2" value="field_3_2" name="field_3[]">
+					<label for="field_3_2">value 2</label>
+					<input type="checkbox" id="field_3_3" value="field_3_3" name="field_3[]">
+					<label for="field_3_3">value 3</label>
+					<span class="helper">Cochez field 3</span>
+				</div>
+				<div class="form-group">
+					<label class="filler">&nbsp;</label>
+					<input required type="checkbox" id="field_4" value="field_4" name="field_4">
+					<label for="field_4">field 4</label>
+					<span class="helper">Cochez field 4</span>
+				</div>
+				<div class="form-group-inline">
+					<label for="field_5" class="filler">field 5</label>
+					<input type="radio" id="field_5_1" value="field_5_1" name="field_5" >
+					<label for="field_5_1">value 1</label>
+					<input type="radio" id="field_5_2" value="field_5_2" name="field_5">
+					<label for="field_5_2">value 2</label>
+					<span class="helper">Cochez  field 5</span>
+				</div>
+			</div>
+		</div>
+		<div class="splitForm__section" data-title="title section 2">
+			content section 2
+		</div>
+		<div class="splitForm__section" data-title="title section 3">
+			content section 3
+		</div>
+	</div>
+</div>
