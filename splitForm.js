@@ -5,7 +5,7 @@ module.exports = function(app){
     SplitForm.lastUpdate     = "2.0.0";
     SplitForm.version        = "1";
     // SplitForm.factoryExclude = true;
-    // SplitForm.loadingMsg     = app.checkForm === undefined ? "app.checkForm function is not defined" : false;
+    // SplitForm.loadingMsg     = utils.checkForm === undefined ? "utils.checkForm function is not defined" : false;
     // SplitForm.requires       = [];
 
     SplitForm.prototype.onCreate = function(){
@@ -40,7 +40,7 @@ module.exports = function(app){
 
         form.$actions.find('.splitForm__action').on('click',function(){
             form.log('action click', this);
-            var checkStep = app.checkForm(form.$sections.filter('.active'),form.renderErrors);
+            var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
             if($(this).attr('data-dir') != 'prev'){ // action is either next or final
                 if (checkStep.valid === false) {
                     form.$sections.filter('.active').removeClass('complete');
@@ -73,7 +73,7 @@ module.exports = function(app){
                     for (var i = 0; i > posNext; i--)
                         form.switchStep('prev');
                 else{
-                    var checkStep = app.checkForm(form.$sections.filter('.active'),form.renderErrors);
+                    var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
                     if (checkStep.valid === true) {
                         form.$sections.filter('.active').addClass('complete');
                         for (var i = 0; i < posNext; i++)
