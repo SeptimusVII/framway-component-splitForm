@@ -86,6 +86,30 @@ module.exports = function(app){
             });
         }
 
+        // set events for conditional fields
+        form.$el.find('input,select,textarea').filter('[data-conditional]').each(function(i,input){
+            var config = {
+                inputRef    : form.$el.find('input,select,textarea').filter('[name="'+input.getAttribute('data-conditional').split('/')[0]+'"]'),
+                targetValue : input.getAttribute('data-conditional').split('/')[1] || false,
+                required    : (input.getAttribute('data-conditional').split('/')[2] === 'required' || input.getAttribute('data-conditional').split('/')[2] === 'all') || false,
+                hide        : (input.getAttribute('data-conditional').split('/')[2] === 'hide'     || input.getAttribute('data-conditional').split('/')[2] === 'all') || false,
+            }
+            config.inputRef.on('change',function(){
+                if (this.value == config.targetValue) {
+                    if (config.required === true)
+                        input.setAttribute('required',true);
+                    if (config.hide === true)
+                        form.hideInput(input,false);
+                        
+                } else {
+                    if (config.required === true)
+                        input.removeAttribute('required');
+                    if (config.hide === true)
+                        form.hideInput(input,true);
+                }
+            }).trigger('change');
+        });
+
         // things to do if there is only one step
         if (form.$sections.length <= 1){
             form.$nav.addClass('hidden');
@@ -94,7 +118,27 @@ module.exports = function(app){
         form.log('created');
     }
 
-    // SplitForm.prototype.switchStep = function(dir){}
+    SplitForm.prototype.hideInput = function(input,hide=true){
+        if (hide === true && !$(input).closest('.hide').length) {
+            if ($(input).closest('.form-group').length)
+                $(input).closest('.form-group').addClass('hide');
+            else if ($(input).closest('.input-group').length)
+                $(input).closest('.input-group').wrap('<div class="hide"></div>');
+            else if ($(input).closest('.select2FW-wrapper').length)
+                $(input).closest('.select2FW-wrapper').wrap('<div class="hide"></div>');
+            else
+                $(input).wrap('<div class="hide"></div>');
+        } else if(hide === false && $(input).closest('.hide').length){
+            if ($(input).closest('.form-group').length)
+                $(input).closest('.form-group').removeClass('hide');
+            else if ($(input).closest('.input-group').length)
+                $(input).closest('.input-group').unwrap('.hide');
+            else if ($(input).closest('.select2FW-wrapper').length)
+                $(input).closest('.select2FW-wrapper').unwrap('.hide');
+            else
+                $(input).unwrap('.hide');
+        }
+    }
     SplitForm.prototype.switchStep = function(dir){
         var form = this;
         return new Promise(function(resolve,reject){

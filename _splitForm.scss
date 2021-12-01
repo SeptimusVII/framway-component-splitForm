@@ -1,4 +1,6 @@
-.splitForm{}
+.splitForm{
+	.hide{pointer-events: none; visibility: hidden; opacity: 0; transition: none; }
+}
 .splitForm__nav{display: flex; font-size: 1.2em; font-weight: bold; margin-bottom: 2rem;overflow: hidden; position: relative;}
 .splitForm__navitem{height: 20px;font-size: 13px; text-align: center; font-weight: normal; color: contrastFW(white,rgba($primary,0.3)); line-height: 20px; background: rgba($primary,0.3); flex-grow: 1; cursor: pointer;transition: all 0.5s;
 	+.splitForm__navitem{margin-left: 5px;}
