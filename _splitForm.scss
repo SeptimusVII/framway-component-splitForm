@@ -1,4 +1,4 @@
-.splitForm{
+.splitForm{ position: relative;
 	.hide{pointer-events: none; visibility: hidden; opacity: 0; transition: none; }
 }
 .splitForm__nav{display: flex; font-size: 1.2em; font-weight: bold; margin-bottom: 2rem;overflow: hidden; position: relative;}
