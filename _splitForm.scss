@@ -21,6 +21,8 @@
 		}
 	}
 	.splitForm[data-enablenav=false] & {pointer-events: none;}
+	a{display: block;}
+	a,a:hover{color:inherit;text-decoration: inherit;}
 }
 .splitForm__sections{margin-bottom: 1rem;}
 .splitForm__section{position: relative; display: none; opacity: 0; pointer-events: none; transition: opacity 0.5s;
@@ -30,5 +32,5 @@
 .splitForm__action{}
 
 .splitForm__fields{
-	&:not(.d-grid){@extend .d-grid, .cols-2, .cols-xxs-1;}
+	&:not(.d-grid){@extend .d-grid, .cols-2, .cols-xxs-1, .gap-2;}
 }
