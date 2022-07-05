@@ -117,7 +117,17 @@ module.exports = function(app){
 
         form.log('created');
     }
-
+    SplitForm.prototype.hideSection = function(section,hide=true){
+        var form = this;
+        var index = form.$sections.toArray().indexOf($(section).get(0));
+        if (hide === true) {
+            $(section).addClass('hide');
+            form.$nav.find('.splitForm__navitem[data-step='+(index)+']').addClass('hide');
+        } else if(hide === false){
+            $(section).removeClass('hide');
+            form.$nav.find('.splitForm__navitem[data-step='+(index)+']').removeClass('hide');  
+        }
+    }
     SplitForm.prototype.hideInput = function(input,hide=true){
         if (hide === true && !$(input).closest('.hide').length) {
             if ($(input).closest('.form-group').length)
@@ -142,7 +152,8 @@ module.exports = function(app){
     SplitForm.prototype.switchStep = function(dir){
         var form = this;
         return new Promise(function(resolve,reject){
-            var $sections = form.$sections.filter(':not(.deactivate)');
+            var $sections = form.$sections.filter(':not(.deactivate)').filter(':not(.hide)');
+            var $navItems = form.$nav.find('.splitForm__navitem').filter(':not(.hide)');
             var current = $sections.toArray().indexOf(form.$sections.filter('.active').get(0));
             var next;
             if (dir == "prev" && current != 0)
@@ -166,8 +177,9 @@ module.exports = function(app){
                     // if (!form.$wrapper.hasClass('isComplete'))
                         form.$actions.find('.step[data-dir="final"]').addClass('hidden');
                 }
-                form.$nav.find('.splitForm__navitem').removeClass('active');
-                form.$nav.find('.splitForm__navitem[data-step='+(next)+']').removeClass('deactivate').addClass('active').prevAll().addClass('complete');
+                $navItems.removeClass('active');
+                // $navItems.filter('[data-step='+(next)+']').removeClass('deactivate').addClass('active').prevAll().addClass('complete');
+                $navItems.eq(next).removeClass('deactivate').addClass('active').prevAll().addClass('complete');
                 form.log('moving to step '+next);
                 if (dir === 'prev') form.onPrev();
                 if (dir === 'next') form.onNext();

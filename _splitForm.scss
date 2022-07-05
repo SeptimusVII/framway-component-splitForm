@@ -7,6 +7,7 @@
     &.complete{background: rgba($primary,0.6); color: contrastFW(white,rgba($primary,0.6));}
     &:hover,
     &.active{background: $primary; color: contrastFW(white,$primary);}
+    &.hide{display: none;}
     &.deactivate{pointer-events: none; background:color(greylight); color: contrastFW(white,color(greylight));}
   	& .number{display: none;}
   	@include media-max(md){
