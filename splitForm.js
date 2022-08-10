@@ -65,10 +65,10 @@ module.exports = function(app){
         });
         if (form.enableNav === true) {
             form.$nav.find('.splitForm__navitem').on('click',function(){
-                form.log('nav item click', this)
+                form.log('nav item click', this);
                 if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
                     return false;
-                var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+                var posNext = form.$nav.find(this).index('.splitForm__navitem:not(.hide)') - form.$nav.find('.active').index('.splitForm__navitem:not(.hide)');
                 if (posNext < 0)
                     for (var i = 0; i > posNext; i--)
                         form.switchStep('prev');
@@ -160,7 +160,6 @@ module.exports = function(app){
                 next = current-1;
             else if(dir == "next" && current != $sections.length-1)
                 next = current+1;
-
             if(dir == 'prev' || (dir == 'next' && $sections.eq(current).hasClass('complete'))){
                 $sections.removeClass('active');
                 $sections.eq(next).addClass('active');
