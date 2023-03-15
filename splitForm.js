@@ -17,9 +17,9 @@ module.exports = function(app){
         form.$nav           = form.$el.find('.splitForm__nav').length       ? form.$el.find('.splitForm__nav') : $('<div class="splitForm__nav"></div>').prependTo(form.$el);
         form.$actions       = form.$el.find('.splitForm__actions').length   ? form.$el.find('.splitForm__nav') : $(`
             <div class="splitForm__actions">
-                <button data-dir="prev"  class="splitForm__action step icon-first hidden"><i class="fa fa-arrow-left"></i>${app.labels.buttons.prev[app.lang]}</button>
-                <button data-dir="next"  class="splitForm__action step icon-last "><i class="fa fa-arrow-right"></i>${app.labels.buttons.next[app.lang]}</button>
-                <button data-dir="final" class="splitForm__action step icon-last hidden btn-bd-primary"><i class="fa fa-check"></i>${app.labels.buttons.send[app.lang]}</button>
+                <button type="button" data-dir="prev"  class="splitForm__action step icon-first hidden"><i class="fa fa-arrow-left"></i>${app.labels.buttons.prev[app.lang]}</button>
+                <button type="button" data-dir="next"  class="splitForm__action step icon-last "><i class="fa fa-arrow-right"></i>${app.labels.buttons.next[app.lang]}</button>
+                <button type="button" data-dir="final" class="splitForm__action step icon-last hidden btn-bd-primary"><i class="fa fa-check"></i>${app.labels.buttons.send[app.lang]}</button>
             </div>
         `).appendTo(form.$el);
         if (form.renderErrors === 'text')
