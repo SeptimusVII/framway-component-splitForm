@@ -2,8 +2,8 @@ module.exports = function(app){
     var SplitForm = Object.getPrototypeOf(app).SplitForm = new app.Component("splitForm");
     // SplitForm.debug = true;
     SplitForm.createdAt      = "2.0.0";
-    SplitForm.lastUpdate     = "2.0.3";
-    SplitForm.version        = "1.0.1";
+    SplitForm.lastUpdate     = "2.4.0";
+    SplitForm.version        = "1.0.2";
     // SplitForm.factoryExclude = true;
     // SplitForm.loadingMsg     = utils.checkForm === undefined ? "utils.checkForm function is not defined" : false;
     // SplitForm.requires       = [];

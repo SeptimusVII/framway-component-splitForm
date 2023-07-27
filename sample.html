@@ -1,4 +1,4 @@
-<div class="splitForm" data-label-prev="Précédent" data-label-next="Suivant" data-label-final="Envoyer" data-onfinal="" data-enablenav="" data-rendererrors="">
+<div class="splitForm" data-onfinal="" data-onprev="" data-onnext="" data-enablenav="" data-rendererrors="">
 	<div class="splitForm__sections">
 		<div class="splitForm__section" data-title="title section 1">
 			<div class="splitForm__fields gap-2">
@@ -49,3 +49,13 @@
 		</div>
 	</div>
 </div>
+
+<constructor component="splitForm">
+  <field type="separator" label="splitForm parameters"></field>
+  <field type="select" label="Errors rendering" target="data-rendererrors" values="text,true,false" labels="Text,Notification,None" selected="text" helper="Define the rendering style of errors (default is Text)"></field>
+  <field type="checkbox" label="Enable nav" target="data-enablenav" selected="true" helper="Enable navigation through head section (default true)"></field>
+  <!-- <field type="text" label="Label previous button" target="data-label-prev" value="" helper=""></field> -->
+  <!-- <field type="text" label="Label next button" target="data-label-next" value="" helper=""></field> -->
+  <!-- <field type="text" label="Label ending button" target="data-label-final" value="" helper=""></field> -->
+  <!-- <field type="empty"></field> -->
+</constructor>
