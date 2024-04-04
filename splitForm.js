@@ -2,8 +2,8 @@ module.exports = function(app){
     var SplitForm = Object.getPrototypeOf(app).SplitForm = new app.Component("splitForm");
     // SplitForm.debug = true;
     SplitForm.createdAt      = "2.0.0";
-    SplitForm.lastUpdate     = "2.4.0";
-    SplitForm.version        = "1.0.2";
+    SplitForm.lastUpdate     = "2.5.0";
+    SplitForm.version        = "1.1.0";
     // SplitForm.factoryExclude = true;
     // SplitForm.loadingMsg     = utils.checkForm === undefined ? "utils.checkForm function is not defined" : false;
     // SplitForm.requires       = [];
@@ -129,24 +129,37 @@ module.exports = function(app){
         }
     }
     SplitForm.prototype.hideInput = function(input,hide=true){
-        if (hide === true && !$(input).closest('.hide').length) {
-            if ($(input).closest('.form-group').length)
-                $(input).closest('.form-group').addClass('hide');
-            else if ($(input).closest('.input-group').length)
-                $(input).closest('.input-group').wrap('<div class="hide"></div>');
-            else if ($(input).closest('.select2FW-wrapper').length)
-                $(input).closest('.select2FW-wrapper').wrap('<div class="hide"></div>');
-            else
-                $(input).wrap('<div class="hide"></div>');
-        } else if(hide === false && $(input).closest('.hide').length){
-            if ($(input).closest('.form-group').length)
-                $(input).closest('.form-group').removeClass('hide');
-            else if ($(input).closest('.input-group').length)
-                $(input).closest('.input-group').unwrap('.hide');
-            else if ($(input).closest('.select2FW-wrapper').length)
-                $(input).closest('.select2FW-wrapper').unwrap('.hide');
-            else
-                $(input).unwrap('.hide');
+        var form = this;
+        if (input instanceof jQuery) {
+            input.each((i,k)=>{
+                form.hideInput(k,hide)
+            });
+        } else {
+            if (hide === true && !$(input).closest('.hide').length) {
+                if ($(input).closest('.form-group,.widget').length)
+                    $(input).closest('.form-group,.widget').addClass('hide');
+                else if ($(input).closest('.input-group').length)
+                    $(input).closest('.input-group').wrap('<div class="hide"></div>');
+                else if ($(input).closest('.select2FW-wrapper').length)
+                    $(input).closest('.select2FW-wrapper').wrap('<div class="hide"></div>');
+                else
+                    $(input).wrap('<div class="hide"></div>');
+
+            } else if(hide === false && $(input).closest('.hide').length){
+                if ($(input).closest('.form-group,.widget').length)
+                    $(input).closest('.form-group,.widget').removeClass('hide');
+                else if ($(input).closest('.input-group').length)
+                    $(input).closest('.input-group').unwrap('.hide');
+                else if ($(input).closest('.select2FW-wrapper').length)
+                    $(input).closest('.select2FW-wrapper').unwrap('.hide');
+                else
+                    $(input).unwrap('.hide');
+
+            }
+            if (input.getAttribute('data-required') !== null && hide === true)
+                input.removeAttribute('required')
+            if (input.getAttribute('data-required') !== null && hide === false)
+                input.setAttribute('required',true);
         }
     }
     SplitForm.prototype.switchStep = function(dir){
