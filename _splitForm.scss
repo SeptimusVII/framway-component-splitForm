@@ -33,5 +33,5 @@
 .splitForm__action{}
 
 .splitForm__fields{
-	&:not(.d-grid){@extend .d-grid, .cols-2, .cols-xxs-1, .gap-2;}
+	&:not(.d-grid){display: grid; @extend .cols-2, .cols-xxs-1, .gap-2;}
 }
