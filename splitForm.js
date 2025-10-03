@@ -2,8 +2,8 @@ module.exports = function(app){
     var SplitForm = Object.getPrototypeOf(app).SplitForm = new app.Component("splitForm");
     // SplitForm.debug = true;
     SplitForm.createdAt      = "2.0.0";
-    SplitForm.lastUpdate     = "2.5.0";
-    SplitForm.version        = "1.1.0";
+    SplitForm.lastUpdate     = "2.6.0";
+    SplitForm.version        = "1.1.1";
     // SplitForm.factoryExclude = true;
     // SplitForm.loadingMsg     = utils.checkForm === undefined ? "utils.checkForm function is not defined" : false;
     // SplitForm.requires       = [];
@@ -195,6 +195,8 @@ module.exports = function(app){
                 form.log('moving to step '+next);
                 if (dir === 'prev') form.onPrev();
                 if (dir === 'next') form.onNext();
+
+                form.$el.get(0).scrollIntoView()
             } else {}
             resolve();
         });
